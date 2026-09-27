@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ru.university.socialnetwork.model.CommunityTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-02T10:29:25" hostname="WIN-3BSMP764Q26" time="0.005">
+  <properties/>
+  <testcase name="deletedProfileIsReadOnly()" classname="ru.university.socialnetwork.model.CommunityTest" time="0.0"/>
+  <testcase name="validCommunityHasNoErrors()" classname="ru.university.socialnetwork.model.CommunityTest" time="0.001"/>
+  <testcase name="detectsInvalidAdministratorId()" classname="ru.university.socialnetwork.model.CommunityTest" time="0.0"/>
+  <testcase name="communityImplementsEditable()" classname="ru.university.socialnetwork.model.CommunityTest" time="0.0"/>
+  <testcase name="detectsInvalidBirthYear()" classname="ru.university.socialnetwork.model.CommunityTest" time="0.0"/>
+  <testcase name="invalidCommunityReturnsErrors()" classname="ru.university.socialnetwork.model.CommunityTest" time="0.001"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>

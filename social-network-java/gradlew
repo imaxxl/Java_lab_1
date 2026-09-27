@@ -1,0 +1,9 @@
+#!/bin/sh
+SCRIPT_DIR="$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)"
+GRADLE_VERSION="8.10.2"
+GRADLE_HOME="$SCRIPT_DIR/.gradle-local/gradle-$GRADLE_VERSION"
+if [ ! -x "$GRADLE_HOME/bin/gradle" ]; then
+  echo "This project includes a Windows-first Gradle launcher. Run gradlew.bat on Windows."
+  exit 1
+fi
+exec "$GRADLE_HOME/bin/gradle" "$@"

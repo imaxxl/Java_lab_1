@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="ru.university.socialnetwork.csv.CsvLoaderTest" tests="6" skipped="0" failures="0" errors="0" timestamp="2026-10-02T10:29:25" hostname="WIN-3BSMP764Q26" time="0.088">
+  <properties/>
+  <testcase name="loadsValidProfiles()" classname="ru.university.socialnetwork.csv.CsvLoaderTest" time="0.041"/>
+  <testcase name="skipsBrokenRows()" classname="ru.university.socialnetwork.csv.CsvLoaderTest" time="0.011"/>
+  <testcase name="loadsDifferentProfileTypes()" classname="ru.university.socialnetwork.csv.CsvLoaderTest" time="0.005"/>
+  <testcase name="detectsWrongFieldCount()" classname="ru.university.socialnetwork.csv.CsvLoaderTest" time="0.011"/>
+  <testcase name="detectsUnknownType()" classname="ru.university.socialnetwork.csv.CsvLoaderTest" time="0.008"/>
+  <testcase name="detectsDuplicateId()" classname="ru.university.socialnetwork.csv.CsvLoaderTest" time="0.009"/>
+  <system-out><![CDATA[]]></system-out>
+  <system-err><![CDATA[]]></system-err>
+</testsuite>
