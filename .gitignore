@@ -1,0 +1,10 @@
+# Generated files and local configuration
+.gradle/
+.gradle-local/
+build/
+bin/
+*.class
+.idea/
+.vscode/
+*.iml
+.DS_Store

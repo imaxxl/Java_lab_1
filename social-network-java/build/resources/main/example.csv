@@ -1,8 +1,0 @@
-type;id;name;city;birthYear;description;administratorId;reason
-PROFILE;1;Анна;Москва;2002;;;
-PROFILE;2;Иван;Казань;2001;;;
-DELETED;3;Пётр;Омск;1999;;;Нарушение правил
-COMMUNITY;4;Java Club;Москва;2020;Сообщество программистов;1;
-BROKEN;abc;Ошибка;Город;2000;;;
-PROFILE;5;Мария;Новосибирск;bad;;;
-PROFILE;6;Сергей;Томск;2003;
