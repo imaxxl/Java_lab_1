@@ -1,267 +1,255 @@
 package ru.university.socialnetwork.gui;
 
 import javafx.application.Application;
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.ReadOnlyStringWrapper;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
-import javafx.scene.control.ButtonBar;
-import javafx.scene.control.ButtonType;
-import javafx.scene.control.Dialog;
 import javafx.scene.control.Label;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
-import javafx.scene.control.ComboBox;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import ru.university.socialnetwork.csv.CsvLoadException;
 import ru.university.socialnetwork.csv.CsvLoader;
 import ru.university.socialnetwork.csv.CsvSaver;
 import ru.university.socialnetwork.model.Community;
 import ru.university.socialnetwork.model.DeletedProfile;
+import ru.university.socialnetwork.model.Editable;
 import ru.university.socialnetwork.model.Profile;
+import ru.university.socialnetwork.model.ProfileType;
+import ru.university.socialnetwork.store.ProfileRepository;
 
 import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
+import java.nio.file.Path;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public class MainWindow extends Application {
+    private ProfileRepository repository = new ProfileRepository();
     private final ObservableList<Profile> profiles = FXCollections.observableArrayList();
     private final TableView<Profile> table = new TableView<>(profiles);
     private final Button editButton = new Button("Изменить");
+    private final BooleanProperty busy = new SimpleBooleanProperty(false);
+    private final Label status = new Label("Профилей: 0");
     private final CsvLoader loader = new CsvLoader();
     private final CsvSaver saver = new CsvSaver();
+    private final ExecutorService ioExecutor = Executors.newSingleThreadExecutor(runnable -> {
+        Thread thread = new Thread(runnable, "csv-io");
+        thread.setDaemon(true);
+        return thread;
+    });
+    private Stage stage;
+    private boolean dirty;
 
     @Override
     public void start(Stage stage) {
+        this.stage = stage;
         TableColumn<Profile, String> typeColumn = new TableColumn<>("Тип");
-        typeColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(typeOf(data.getValue())));
-
-        TableColumn<Profile, String> idColumn = new TableColumn<>("ID");
-        idColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(String.valueOf(data.getValue().getId())));
-
+        typeColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(ProfileType.of(data.getValue()).toString()));
+        TableColumn<Profile, Integer> idColumn = new TableColumn<>("ID");
+        idColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getId()));
         TableColumn<Profile, String> nameColumn = new TableColumn<>("Имя");
-        nameColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getName()));
-
+        nameColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getName()));
         TableColumn<Profile, String> cityColumn = new TableColumn<>("Город");
-        cityColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(data.getValue().getCity()));
-
-        TableColumn<Profile, String> yearColumn = new TableColumn<>("Год");
-        yearColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(String.valueOf(data.getValue().getBirthYear())));
-
+        cityColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(data.getValue().getCity()));
+        TableColumn<Profile, Integer> yearColumn = new TableColumn<>("Год");
+        yearColumn.setCellValueFactory(data -> new ReadOnlyObjectWrapper<>(data.getValue().getBirthYear()));
         TableColumn<Profile, String> extraColumn = new TableColumn<>("Дополнительно");
-        extraColumn.setCellValueFactory(data -> new javafx.beans.property.SimpleStringProperty(extraOf(data.getValue())));
-
-        table.getColumns().addAll(typeColumn, idColumn, nameColumn, cityColumn, yearColumn, extraColumn);
-        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+        extraColumn.setCellValueFactory(data -> new ReadOnlyStringWrapper(extraOf(data.getValue())));
+        typeColumn.setPrefWidth(180);
+        idColumn.setPrefWidth(65);
+        nameColumn.setPrefWidth(160);
+        cityColumn.setPrefWidth(140);
+        yearColumn.setPrefWidth(80);
+        extraColumn.setPrefWidth(370);
+        table.getColumns().addAll(List.of(typeColumn, idColumn, nameColumn, cityColumn, yearColumn, extraColumn));
+        table.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_FLEX_LAST_COLUMN);
 
         Button loadButton = new Button("Загрузить из CSV");
         Button saveButton = new Button("Сохранить в CSV");
         Button addButton = new Button("Добавить");
-
-        editButton.setDisable(true);
-
-        table.getSelectionModel().selectedItemProperty().addListener((obs, oldValue, newValue) -> {
-            editButton.setDisable(!(newValue instanceof ru.university.socialnetwork.model.Editable));
-        });
-
-        loadButton.setOnAction(event -> load(stage));
-        saveButton.setOnAction(event -> save(stage));
+        loadButton.disableProperty().bind(busy);
+        saveButton.disableProperty().bind(busy);
+        addButton.disableProperty().bind(busy);
+        editButton.disableProperty().bind(busy.or(Bindings.createBooleanBinding(
+                () -> !(table.getSelectionModel().getSelectedItem() instanceof Editable),
+                table.getSelectionModel().selectedItemProperty())));
+        loadButton.setOnAction(event -> chooseLoad());
+        saveButton.setOnAction(event -> chooseSave());
         addButton.setOnAction(event -> add());
         editButton.setOnAction(event -> edit());
 
-        HBox buttons = new HBox(10, loadButton, saveButton, addButton, editButton);
-        buttons.setPadding(new Insets(10));
-
-        VBox root = new VBox(10, table, buttons);
-        root.setPadding(new Insets(10));
-
-        stage.setTitle("Социальная сеть");
-        stage.setScene(new Scene(root, 950, 550));
+        ProgressIndicator progress = new ProgressIndicator();
+        progress.setPrefSize(22, 22);
+        progress.visibleProperty().bind(busy);
+        progress.managedProperty().bind(busy);
+        HBox buttons = new HBox(10, loadButton, saveButton, addButton, editButton, progress);
+        HBox footer = new HBox(status);
+        VBox root = new VBox(12, table, buttons, footer);
+        root.setPadding(new Insets(12));
+        VBox.setVgrow(table, Priority.ALWAYS);
+        stage.setScene(new Scene(root, 1050, 580));
+        stage.setMinWidth(740);
+        stage.setMinHeight(400);
+        updateTitle();
+        stage.setOnCloseRequest(event -> {
+            if (busy.get()) {
+                event.consume();
+                GuiAlerts.show(stage, Alert.AlertType.INFORMATION, "Операция выполняется",
+                        "Дождитесь завершения загрузки или сохранения.");
+            } else if (dirty && !GuiAlerts.confirmDiscard(stage)) {
+                event.consume();
+            }
+        });
         stage.show();
     }
 
-    private String typeOf(Profile profile) {
-        if (profile instanceof Community) {
-            return "Сообщество";
-        }
-        if (profile instanceof DeletedProfile) {
-            return "Удалённый профиль";
-        }
-        return "Профиль";
-    }
-
-    private String extraOf(Profile profile) {
+    private static String extraOf(Profile profile) {
         if (profile instanceof Community community) {
             return community.getDescription() + ", администратор: " + community.getAdministratorId();
         }
-        if (profile instanceof DeletedProfile deletedProfile) {
-            return "Причина: " + deletedProfile.getReason();
-        }
+        if (profile instanceof DeletedProfile deleted) return "Причина: " + deleted.getReason();
         return "";
     }
 
-    private void load(Stage stage) {
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle("Выберите CSV-файл");
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV files", "*.csv"));
-
-        File file = chooser.showOpenDialog(stage);
-
-        if (file == null) {
-            return;
-        }
-
-        try {
-            CsvLoader.LoadResult result = loader.load(file.toPath());
-            profiles.setAll(result.profiles());
-
-            if (!result.errors().isEmpty()) {
-                StringBuilder message = new StringBuilder("Некоторые строки пропущены:\n\n");
-
-                for (CsvLoadException error : result.errors()) {
-                    message.append("Строка ")
-                            .append(error.getLineNumber())
-                            .append(": ")
-                            .append(error.getCode())
-                            .append(" — ")
-                            .append(error.getMessage())
-                            .append("\n");
-                }
-
-                showAlert(Alert.AlertType.WARNING, "Ошибки загрузки", message.toString());
-            }
-        } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Ошибка", e.getMessage());
-        }
+    private void chooseLoad() {
+        File file = csvChooser("Выберите CSV-файл").showOpenDialog(stage);
+        if (file == null || (dirty && !GuiAlerts.confirmDiscard(stage))) return;
+        loadFile(file.toPath());
     }
 
-    private void save(Stage stage) {
-        FileChooser chooser = new FileChooser();
-        chooser.setTitle("Сохранить CSV-файл");
-        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV files", "*.csv"));
-
+    private void chooseSave() {
+        FileChooser chooser = csvChooser("Сохранить CSV-файл");
+        chooser.setInitialFileName("profiles.csv");
         File file = chooser.showSaveDialog(stage);
+        if (file != null) saveFile(file.toPath());
+    }
 
-        if (file == null) {
-            return;
-        }
+    private static FileChooser csvChooser(String title) {
+        FileChooser chooser = new FileChooser();
+        chooser.setTitle(title);
+        chooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("CSV UTF-8", "*.csv"));
+        return chooser;
+    }
 
-        try {
-            saver.save(file.toPath(), new ArrayList<>(profiles));
-        } catch (IOException e) {
-            showAlert(Alert.AlertType.ERROR, "Ошибка сохранения", e.getMessage());
-        }
+    // Отделены от FileChooser, чтобы I/O можно было проверять без нативного диалога.
+    void loadFile(Path file) {
+        Task<LoadedCsv> task = new Task<>() {
+            @Override protected LoadedCsv call() throws Exception {
+                CsvLoader.LoadResult result = loader.load(file);
+                ProfileRepository replacement = new ProfileRepository();
+                replacement.replaceAll(result.profiles()); // Валидация большого набора тоже в фоне.
+                return new LoadedCsv(result, replacement);
+            }
+        };
+        runTask(task, "Загрузка CSV…", loaded -> {
+            CsvLoader.LoadResult result = loaded.result();
+            boolean retained = result.profiles().isEmpty() && !profiles.isEmpty();
+            if (!retained) {
+                repository = loaded.repository();
+                updateView();
+                dirty = false;
+                updateTitle();
+            }
+            if (!result.errors().isEmpty()) {
+                GuiAlerts.showCsvErrors(stage, result, retained);
+            } else if (retained) {
+                GuiAlerts.show(stage, Alert.AlertType.INFORMATION, "Пустой CSV",
+                        "В файле нет профилей. Текущие данные сохранены.");
+            }
+        });
+    }
+
+    void saveFile(Path file) {
+        List<Profile> snapshot = repository.snapshot();
+        Task<Void> task = new Task<>() {
+            @Override protected Void call() throws Exception {
+                saver.save(file, snapshot);
+                return null;
+            }
+        };
+        runTask(task, "Сохранение CSV…", ignored -> {
+            dirty = false;
+            updateTitle();
+            status.setText("Сохранено профилей: " + snapshot.size());
+        });
+    }
+
+    private <T> void runTask(Task<T> task, String message, Consumer<T> onSuccess) {
+        if (busy.get()) throw new IllegalStateException("Другая операция ещё выполняется");
+        busy.set(true);
+        status.setText(message);
+        task.setOnSucceeded(event -> {
+            busy.set(false);
+            status.setText("Профилей: " + repository.size());
+            try {
+                onSuccess.accept(task.getValue());
+            } catch (IllegalArgumentException e) {
+                GuiAlerts.show(stage, Alert.AlertType.ERROR, "Некорректные данные", e.getMessage());
+            }
+        });
+        task.setOnFailed(event -> {
+            busy.set(false);
+            status.setText("Профилей: " + repository.size());
+            Throwable failure = task.getException();
+            GuiAlerts.show(stage, Alert.AlertType.ERROR, "Ошибка работы с CSV",
+                    failure == null ? "Неизвестная ошибка" : failure.getMessage());
+        });
+        task.setOnCancelled(event -> {
+            busy.set(false);
+            status.setText("Операция отменена. Профилей: " + repository.size());
+        });
+        ioExecutor.execute(task);
     }
 
     private void add() {
-        Dialog<Community> dialog = communityDialog(null);
-        dialog.setTitle("Добавить сообщество");
-
-        dialog.showAndWait().ifPresent(community -> {
-            profiles.add(community);
-            table.getSelectionModel().select(community);
+        ProfileEditorDialog dialog = new ProfileEditorDialog(stage, null, repository::validateForAdd);
+        dialog.showAndWait().ifPresent(profile -> {
+            repository.add(profile);
+            updateView();
+            table.getSelectionModel().select(profile);
+            markDirty();
         });
     }
 
     private void edit() {
-        Profile selected = table.getSelectionModel().getSelectedItem();
-
-        if (!(selected instanceof Community community)) {
-            return;
-        }
-
-        Dialog<Community> dialog = communityDialog(community);
-        dialog.setTitle("Изменить сообщество");
-
-        dialog.showAndWait().ifPresent(updated -> {
-            community.setName(updated.getName());
-            community.setCity(updated.getCity());
-            community.setBirthYear(updated.getBirthYear());
-            community.setDescription(updated.getDescription());
-            community.setAdministratorId(updated.getAdministratorId());
-            table.refresh();
+        Profile source = table.getSelectionModel().getSelectedItem();
+        if (!(source instanceof Editable)) return;
+        ProfileEditorDialog dialog = new ProfileEditorDialog(stage, source,
+                replacement -> repository.validateForReplace(source.getId(), replacement));
+        dialog.showAndWait().ifPresent(replacement -> {
+            repository.replace(source.getId(), replacement);
+            updateView();
+            table.getSelectionModel().select(replacement);
+            markDirty();
         });
     }
 
-    private Dialog<Community> communityDialog(Community source) {
-        Dialog<Community> dialog = new Dialog<>();
-        ButtonType saveType = new ButtonType("Сохранить", ButtonBar.ButtonData.OK_DONE);
-        dialog.getDialogPane().getButtonTypes().addAll(saveType, ButtonType.CANCEL);
-
-        TextField idField = new TextField(source == null ? "" : String.valueOf(source.getId()));
-        TextField nameField = new TextField(source == null ? "" : source.getName());
-        TextField cityField = new TextField(source == null ? "" : source.getCity());
-        TextField yearField = new TextField(source == null ? "" : String.valueOf(source.getBirthYear()));
-        TextField descriptionField = new TextField(source == null ? "" : source.getDescription());
-        TextField administratorField = new TextField(source == null ? "" : String.valueOf(source.getAdministratorId()));
-
-        if (source != null) {
-            idField.setDisable(true);
-        }
-
-        GridPane grid = new GridPane();
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(10));
-
-        grid.addRow(0, new Label("ID:"), idField);
-        grid.addRow(1, new Label("Название:"), nameField);
-        grid.addRow(2, new Label("Город:"), cityField);
-        grid.addRow(3, new Label("Год:"), yearField);
-        grid.addRow(4, new Label("Описание:"), descriptionField);
-        grid.addRow(5, new Label("ID администратора:"), administratorField);
-
-        dialog.getDialogPane().setContent(grid);
-
-        dialog.setResultConverter(button -> {
-            if (button != saveType) {
-                return null;
-            }
-
-            try {
-                Community community = new Community(
-                        Integer.parseInt(idField.getText().trim()),
-                        nameField.getText().trim(),
-                        cityField.getText().trim(),
-                        Integer.parseInt(yearField.getText().trim()),
-                        descriptionField.getText().trim(),
-                        Integer.parseInt(administratorField.getText().trim())
-                );
-
-                List<String> errors = community.validate();
-
-                if (!errors.isEmpty()) {
-                    showAlert(Alert.AlertType.ERROR, "Ошибка валидации", String.join("\n", errors));
-                    return null;
-                }
-
-                return community;
-            } catch (NumberFormatException e) {
-                showAlert(Alert.AlertType.ERROR, "Ошибка", "ID, год и ID администратора должны быть числами");
-                return null;
-            }
-        });
-
-        return dialog;
+    private void updateView() {
+        profiles.setAll(repository.snapshot());
+        table.sort();
+        status.setText("Профилей: " + repository.size());
     }
 
-    private void showAlert(Alert.AlertType type, String title, String message) {
-        Alert alert = new Alert(type);
-        alert.setTitle(title);
-        alert.setHeaderText(null);
-        alert.setContentText(message);
-        alert.showAndWait();
-    }
+    private record LoadedCsv(CsvLoader.LoadResult result, ProfileRepository repository) { }
 
-    public static void launch(Class<? extends Application> appClass, String... args) {
-        Application.launch(appClass, args);
-    }
+    private void markDirty() { dirty = true; updateTitle(); }
+    private void updateTitle() { if (stage != null) stage.setTitle("Социальная сеть — лабораторная 1" + (dirty ? " *" : "")); }
+
+    @Override
+    public void stop() { ioExecutor.shutdownNow(); }
 }
