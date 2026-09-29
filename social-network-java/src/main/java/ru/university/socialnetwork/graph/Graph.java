@@ -16,16 +16,28 @@ public class Graph {
     private final Map<Integer, Profile> profiles = new HashMap<>();
     private final Map<Integer, EdgeNode> adjacency = new HashMap<>();
 
+    /** Только вставка: повторный ID не заменяет существующий профиль. */
     public void addProfile(Profile profile) {
+        if (profile == null) throw new IllegalArgumentException("Профиль не задан");
+        List<String> errors = profile.validate();
+        if (!errors.isEmpty()) throw new IllegalArgumentException(String.join("\n", errors));
+        if (profiles.containsKey(profile.getId())) {
+            throw new IllegalArgumentException("ID " + profile.getId() + " уже занят");
+        }
         profiles.put(profile.getId(), profile);
-        adjacency.putIfAbsent(profile.getId(), null);
+        adjacency.put(profile.getId(), null);
     }
 
     public void addFriendship(Friendship friendship) {
+        if (friendship == null) throw new IllegalArgumentException("Связь не задана");
         if (!profiles.containsKey(friendship.getFirstId()) || !profiles.containsKey(friendship.getSecondId())) {
             throw new IllegalArgumentException("Профиль для дружбы не найден");
         }
-
+        for (EdgeNode node = adjacency.get(friendship.getFirstId()); node != null; node = node.next) {
+            if (node.friendship.getOtherId(friendship.getFirstId()) == friendship.getSecondId()) {
+                throw new IllegalArgumentException("Эта дружба уже существует");
+            }
+        }
         addEdge(friendship.getFirstId(), friendship);
         addEdge(friendship.getSecondId(), friendship);
     }
