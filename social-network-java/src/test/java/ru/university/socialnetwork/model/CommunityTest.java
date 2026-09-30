@@ -51,7 +51,7 @@ class CommunityTest {
         List<String> errors = community.validate();
 
         assertEquals(1, errors.size());
-        assertEquals("Год должен быть от 1900 до 2026", errors.get(0));
+        assertEquals("Год должен быть от 1900 до " + java.time.Year.now().getValue(), errors.get(0));
     }
 
     @Test
@@ -95,6 +95,6 @@ class CommunityTest {
                 "Нарушение правил"
         );
 
-        assertFalse(profile instanceof Editable);
+        assertFalse(Editable.class.isAssignableFrom(profile.getClass()));
     }
 }
