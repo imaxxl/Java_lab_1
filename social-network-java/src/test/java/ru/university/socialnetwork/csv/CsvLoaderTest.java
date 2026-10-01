@@ -1,6 +1,7 @@
 package ru.university.socialnetwork.csv;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -8,10 +9,12 @@ import java.nio.file.Path;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CsvLoaderTest {
+    @TempDir
+    Path temporaryDirectory;
 
     @Test
     void loadsValidProfiles() throws Exception {
-        Path file = Files.createTempFile("profiles", ".csv");
+        Path file = temporaryDirectory.resolve("profiles.csv");
 
         Files.writeString(file,
                 CsvLoader.header() + System.lineSeparator()
@@ -30,7 +33,7 @@ class CsvLoaderTest {
 
     @Test
     void loadsDifferentProfileTypes() throws Exception {
-        Path file = Files.createTempFile("profiles", ".csv");
+        Path file = temporaryDirectory.resolve("profiles.csv");
 
         Files.writeString(file,
                 CsvLoader.header() + System.lineSeparator()
@@ -52,7 +55,7 @@ class CsvLoaderTest {
 
     @Test
     void skipsBrokenRows() throws Exception {
-        Path file = Files.createTempFile("profiles", ".csv");
+        Path file = temporaryDirectory.resolve("profiles.csv");
 
         Files.writeString(file,
                 CsvLoader.header() + System.lineSeparator()
@@ -72,7 +75,7 @@ class CsvLoaderTest {
 
     @Test
     void detectsDuplicateId() throws Exception {
-        Path file = Files.createTempFile("profiles", ".csv");
+        Path file = temporaryDirectory.resolve("profiles.csv");
 
         Files.writeString(file,
                 CsvLoader.header() + System.lineSeparator()
@@ -90,7 +93,7 @@ class CsvLoaderTest {
 
     @Test
     void detectsWrongFieldCount() throws Exception {
-        Path file = Files.createTempFile("profiles", ".csv");
+        Path file = temporaryDirectory.resolve("profiles.csv");
 
         Files.writeString(file,
                 CsvLoader.header() + System.lineSeparator()
@@ -106,7 +109,7 @@ class CsvLoaderTest {
 
     @Test
     void detectsUnknownType() throws Exception {
-        Path file = Files.createTempFile("profiles", ".csv");
+        Path file = temporaryDirectory.resolve("profiles.csv");
         Files.writeString(file,
                 CsvLoader.header() + System.lineSeparator()
                         + "ADMIN;1;Анна;Москва;2002;;;"
