@@ -75,21 +75,35 @@ class ProfileEditorDialogTest {
 
     @SuppressWarnings("unchecked")
     @Test
-    void addOffersNoDeletedTypeAndCanCreateCommunity() throws Exception {
+    void addOffersNoDeletedType() throws Exception {
+        FxTestSupport.run(() -> {
+            ProfileEditorDialog dialog = new ProfileEditorDialog(null, null, profile -> { });
+            try {
+                dialog.show();
+                ComboBox<ProfileType> types = (ComboBox<ProfileType>) dialog.getDialogPane().lookup("#typeField");
+                assertFalse(types.getItems().contains(ProfileType.DELETED));
+            } finally { dialog.close(); }
+            return null;
+        });
+    }
+
+    @Test
+    void communityCanBeCreatedThroughEditor() throws Exception {
         FxTestSupport.run(() -> {
             ProfileRepository repository = new ProfileRepository();
             repository.add(new EditableProfile(1, "Администратор", "Москва", 2000));
             ProfileEditorDialog dialog = new ProfileEditorDialog(null, null, repository::validateForAdd);
-            dialog.show();
-            ComboBox<ProfileType> types = (ComboBox<ProfileType>) dialog.getDialogPane().lookup("#typeField");
-            assertFalse(types.getItems().contains(ProfileType.DELETED));
-            types.setValue(ProfileType.COMMUNITY);
-            fill(dialog.getDialogPane(), "2", "Java Club");
-            ((TextField) dialog.getDialogPane().lookup("#descriptionField")).setText("Java; Kotlin");
-            ((TextField) dialog.getDialogPane().lookup("#administratorField")).setText("1");
-            save(dialog.getDialogPane()).fire();
-            assertInstanceOf(Community.class, dialog.getResult());
-            assertEquals("Java; Kotlin", ((Community) dialog.getResult()).getDescription());
+            try {
+                dialog.show();
+                ComboBox<ProfileType> types = (ComboBox<ProfileType>) dialog.getDialogPane().lookup("#typeField");
+                types.setValue(ProfileType.COMMUNITY);
+                fill(dialog.getDialogPane(), "2", "Java Club");
+                ((TextField) dialog.getDialogPane().lookup("#descriptionField")).setText("Java; Kotlin");
+                ((TextField) dialog.getDialogPane().lookup("#administratorField")).setText("1");
+                save(dialog.getDialogPane()).fire();
+                assertInstanceOf(Community.class, dialog.getResult());
+                assertEquals("Java; Kotlin", ((Community) dialog.getResult()).getDescription());
+            } finally { dialog.close(); }
             return null;
         });
     }
