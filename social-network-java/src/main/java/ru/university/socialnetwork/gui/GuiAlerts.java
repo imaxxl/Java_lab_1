@@ -6,6 +6,7 @@ import javafx.scene.control.TextArea;
 import javafx.stage.Window;
 import ru.university.socialnetwork.csv.CsvLoader;
 
+
 public final class GuiAlerts {
     private static final int MAX_SHOWN_ERRORS = 50;
 
@@ -39,14 +40,13 @@ public final class GuiAlerts {
         Alert alert = new Alert(Alert.AlertType.WARNING);
         if (owner != null) alert.initOwner(owner);
         alert.setTitle("Ошибки загрузки CSV");
-        alert.setHeaderText(null);
         String summary = "Корректных профилей в файле: " + result.profiles().size()
                 + ". Ошибок: " + result.errors().size() + ".";
         if (retainedOldData) summary += " Текущие данные сохранены.";
         if (result.errors().size() > MAX_SHOWN_ERRORS) {
             summary += " Ниже первые " + MAX_SHOWN_ERRORS + " ошибок.";
         }
-        alert.setContentText(summary);
+        alert.setHeaderText(summary);
         StringBuilder details = new StringBuilder();
         result.errors().stream().limit(MAX_SHOWN_ERRORS).forEach(error -> details
                 .append("Строка ").append(error.getLineNumber()).append(": ")
@@ -55,9 +55,8 @@ public final class GuiAlerts {
         text.setEditable(false);
         text.setWrapText(true);
         text.setPrefColumnCount(75);
-        text.setPrefRowCount(10);
-        alert.getDialogPane().setExpandableContent(text);
-        alert.getDialogPane().setExpanded(true);
+        text.setPrefRowCount(8);
+        alert.getDialogPane().setContent(text);
         alert.setResizable(true);
         alert.showAndWait();
     }
