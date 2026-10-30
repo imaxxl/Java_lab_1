@@ -143,13 +143,12 @@ public class MainWindow extends Application {
         if (file != null) saveFile(file.toPath());
     }
 
-    // Отделены от FileChooser, чтобы I/O можно было проверять без нативного диалога.
     void loadFile(Path file) {
         Task<LoadedCsv> task = new Task<>() {
             @Override protected LoadedCsv call() throws Exception {
                 CsvLoader.LoadResult result = loader.load(file, (done, total) -> updateProgress(done, total));
                 ProfileRepository replacement = new ProfileRepository();
-                replacement.replaceAll(result.profiles()); // Валидация большого набора тоже в фоне.
+                replacement.replaceAll(result.profiles());
                 return new LoadedCsv(result, replacement);
             }
         };

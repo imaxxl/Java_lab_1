@@ -163,7 +163,7 @@ class MainWindowTest {
                 });
             });
             start.run();
-            assertTrue(busy.get()); // Метод уже вернулся, а I/O ещё выполняется отдельно.
+            assertTrue(busy.get());
             return null;
         });
         done.get(15, TimeUnit.SECONDS);

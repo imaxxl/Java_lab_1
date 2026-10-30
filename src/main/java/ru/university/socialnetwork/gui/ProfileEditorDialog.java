@@ -107,7 +107,7 @@ public final class ProfileEditorDialog extends Dialog<Profile> {
                 contextValidator.accept(parsed);
                 candidate = parsed;
             } catch (IllegalArgumentException e) {
-                event.consume(); // Не позволяет JavaFX закрыть окно при ошибке.
+                event.consume();
                 Window dialogWindow = getDialogPane().getScene() == null ? owner
                         : getDialogPane().getScene().getWindow();
                 GuiAlerts.show(dialogWindow, Alert.AlertType.ERROR, "Некорректные данные", e.getMessage());

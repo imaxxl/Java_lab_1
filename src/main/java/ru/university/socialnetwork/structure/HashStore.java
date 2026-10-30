@@ -135,7 +135,6 @@ public class HashStore<K, T> implements EntityStore<K, T> {
 
     public int bucketOf(K key) { return indexFor(hash(key), buckets.length); }
 
-    // пересчёт по корзинам, а не по счётчику size: так видно, что потерялось при гонке
     public int reachableCount() {
         int count = 0;
         for (Node<K, T> head : buckets) {

@@ -101,7 +101,6 @@ public final class DataGenerator {
         return added;
     }
 
-    // новые записи удаляются с конца, чтобы сообщество исчезало раньше своего администратора
     private static void rollback(ProfileRepository repository, int firstId, int created) {
         for (int i = created - 1; i >= 0; i--) repository.forceRemove(firstId + i);
     }

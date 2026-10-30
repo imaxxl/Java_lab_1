@@ -64,7 +64,6 @@ final class TaskRunner {
                         failure == null ? "Неизвестная ошибка" : failure.getMessage());
             }
         });
-        // Исполнитель сбрасывает прерывание перед началом задачи, поэтому отмену, пришедшую раньше, применяем заново.
         executor.execute(() -> {
             if (cancelRequested) Thread.currentThread().interrupt();
             task.run();

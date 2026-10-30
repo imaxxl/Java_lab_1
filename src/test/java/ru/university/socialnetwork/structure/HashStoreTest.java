@@ -13,7 +13,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class HashStoreTest {
     private static HashStore<Integer, Integer> store() { return new HashStore<>(value -> value); }
 
-    /** Две корзины без расширения: все нечётные ключи попадают в одну цепочку. */
     private static HashStore<Integer, Integer> crowded() { return new HashStore<>(value -> value, 2, false); }
 
     private static List<Integer> inOrder(HashStore<Integer, Integer> store) {
@@ -82,9 +81,9 @@ class HashStoreTest {
     void removesHeadMiddleAndTailOfOneChain() {
         HashStore<Integer, Integer> store = crowded();
         for (int key : new int[]{1, 3, 5, 7, 9}) store.add(key);
-        assertTrue(store.removeByKey(9));   // голова цепочки: вставляли последним
-        assertTrue(store.removeByKey(5));   // середина
-        assertTrue(store.removeByKey(1));   // хвост
+        assertTrue(store.removeByKey(9));
+        assertTrue(store.removeByKey(5));
+        assertTrue(store.removeByKey(1));
         assertEquals(2, store.size());
         assertEquals(2, store.reachableCount());
         assertEquals(3, store.findByKey(3));
@@ -109,7 +108,7 @@ class HashStoreTest {
     @Test
     void traceShowsComparedNodesOfTheChain() {
         HashStore<Integer, Integer> store = crowded();
-        for (int key : new int[]{1, 3, 5}) store.add(key);   // цепочка: 5 → 3 → 1
+        for (int key : new int[]{1, 3, 5}) store.add(key);
         Trace trace = new Trace();
         assertEquals(1, store.findByKey(1, trace));
         assertEquals(3, trace.count());

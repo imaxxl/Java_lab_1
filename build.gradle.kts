@@ -38,7 +38,6 @@ sourceSets {
     }
 }
 
-// Замеры времени: ./gradlew benchmark (в обычную сборку и тесты не входят)
 tasks.register<JavaExec>("benchmark") {
     group = "verification"
     description = "Замеры операций над собственным графом и аналогом из java.util"
@@ -50,7 +49,6 @@ tasks.register<JavaExec>("benchmark") {
 tasks.test {
     useJUnitPlatform()
     maxParallelForks = 1
-    // Только тесты запускаются headless; обычный ./gradlew run открывает GUI.
     systemProperty("glass.platform", "Monocle")
     systemProperty("monocle.platform", "Headless")
     systemProperty("prism.order", "sw")

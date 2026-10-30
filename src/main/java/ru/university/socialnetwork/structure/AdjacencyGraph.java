@@ -100,7 +100,6 @@ public class AdjacencyGraph<K, T> implements GraphStore<K, T> {
         if (first.equals(second)) throw new IllegalArgumentException("Нельзя добавить дружбу с самим собой");
         Vertex<K, T> a = require(first);
         Vertex<K, T> b = require(second);
-        // Повтор ищем в списке с меньшим числом соседей: связь с «хабом» остаётся дешёвой.
         Vertex<K, T> shorter = a.degree <= b.degree ? a : b;
         Vertex<K, T> other = shorter == a ? b : a;
         if (findEdge(shorter, other) != null) throw new IllegalArgumentException("Такая связь уже есть");
@@ -138,7 +137,6 @@ public class AdjacencyGraph<K, T> implements GraphStore<K, T> {
 
     @Override
     @SuppressWarnings("unchecked")
-    // поиск в ширину; очередь — массив, каждая вершина попадает в неё один раз
     public Chain<K> shortestChain(K from, K to, Trace trace) {
         Vertex<K, T> start = vertices.findByKey(from, null);
         Vertex<K, T> goal = vertices.findByKey(to, null);

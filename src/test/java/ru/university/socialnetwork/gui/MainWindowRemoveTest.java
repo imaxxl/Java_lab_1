@@ -31,7 +31,6 @@ class MainWindowRemoveTest {
         method.invoke(app);
     }
 
-    /** Окно создаётся и закрывается в потоке JavaFX; сам сценарий получает окно и таблицу. */
     @SuppressWarnings("unchecked")
     private static void withWindow(Scenario scenario) throws Exception {
         FxTestSupport.run((Callable<Void>) () -> {
