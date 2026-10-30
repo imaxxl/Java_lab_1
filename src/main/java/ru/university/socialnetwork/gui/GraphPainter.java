@@ -9,7 +9,6 @@ import javafx.scene.text.TextAlignment;
 import ru.university.socialnetwork.model.ProfileType;
 import ru.university.socialnetwork.store.StructureSnapshot;
 
-/** Рисует граф: вершины по кругу, рёбра с силой связи, подсветка посещённых узлов и найденного пути. */
 final class GraphPainter {
     private static final double MARGIN = 54;
     private static final double BIG_RADIUS = 17;
@@ -93,7 +92,6 @@ final class GraphPainter {
         g.fillText("путь", x + 2 * LEGEND_DOT + LEGEND_TEXT_SHIFT, LEGEND_Y);
     }
 
-    /** Рисует кружок с подписью и возвращает, где начинается следующий элемент легенды. */
     private static double legendItem(GraphicsContext g, double x, Color color, String label, Font font) {
         g.setFill(color);
         g.fillOval(x, LEGEND_Y - LEGEND_DOT, 2 * LEGEND_DOT, 2 * LEGEND_DOT);
@@ -125,7 +123,6 @@ final class GraphPainter {
         g.setLineWidth(1);
     }
 
-    /** Число силы связи с белой обводкой, чтобы оно читалось и поверх красной линии пути. */
     private static void drawStrength(GraphicsContext g, String text, double x, double y) {
         g.setStroke(BACKGROUND);
         g.setLineWidth(LABEL_HALO);

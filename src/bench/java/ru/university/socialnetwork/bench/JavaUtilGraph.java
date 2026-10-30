@@ -9,7 +9,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-/** Ближайший аналог из java.util — нужен только для сравнения в замерах, в основном коде его нет. */
 final class JavaUtilGraph {
     private final Map<Integer, Profile> profiles = new HashMap<>();
     private final Map<Integer, List<int[]>> adjacency = new HashMap<>();
@@ -42,7 +41,6 @@ final class JavaUtilGraph {
         b.add(new int[]{first, strength});
     }
 
-    /** Число вершин в кратчайшей цепочке; 0 — пути нет. */
     int chainLength(int from, int to) {
         if (!profiles.containsKey(from) || !profiles.containsKey(to)) return 0;
         Map<Integer, Integer> distance = new HashMap<>();

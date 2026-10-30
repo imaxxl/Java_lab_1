@@ -1,6 +1,5 @@
 package ru.university.socialnetwork.structure;
 
-/** Запоминает, какие ключи посетила последняя операция: по этому следу панель подсвечивает узлы. */
 public final class Trace {
     private static final int START_CAPACITY = 16;
 

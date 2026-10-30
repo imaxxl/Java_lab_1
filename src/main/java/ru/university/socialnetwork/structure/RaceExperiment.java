@@ -1,10 +1,5 @@
 package ru.university.socialnetwork.structure;
 
-/**
- * Опыт с гонкой потоков: несколько потоков одновременно добавляют вершины, а потом рёбра к общей вершине-хабу.
- * Один и тот же сценарий выполняется на «голом» графе и на графе под synchronized.
- * Таблица без авторасширения, поэтому цепочки длинные, а пересчёт идёт обходом, а не по счётчикам.
- */
 public final class RaceExperiment {
     private static final int HUB = 0;
     private static final int TABLE_CAPACITY = 1024;

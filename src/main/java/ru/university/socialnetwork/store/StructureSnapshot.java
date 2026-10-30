@@ -2,7 +2,6 @@ package ru.university.socialnetwork.store;
 
 import ru.university.socialnetwork.model.ProfileType;
 
-/** Неизменяемый срез структуры для панели: первые вершины, рёбра между ними и содержимое корзин индекса. */
 public final class StructureSnapshot {
     private final int vertexTotal;
     private final int edgeTotal;

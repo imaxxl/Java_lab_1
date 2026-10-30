@@ -6,7 +6,6 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
-/** Предварительный проход по файлу: число строк нужно, чтобы показать прогресс загрузки в процентах. */
 final class LineCounter {
     private LineCounter() { }
 

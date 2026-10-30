@@ -1,6 +1,5 @@
 package ru.university.socialnetwork.structure;
 
-/** Граф: вершины — записи, рёбра — неориентированные связи с целой «силой». */
 public interface GraphStore<K, T> extends EntityStore<K, T> {
     void add(T entity, Trace trace);
     T findByKey(K key, Trace trace);

@@ -1,10 +1,5 @@
 package ru.university.socialnetwork.structure;
 
-/**
- * Хеш-таблица: массив корзин, в каждой корзине цепочка собственных узлов.
- * Кроме цепочек узлы связаны двусвязным списком в порядке вставки, поэтому обход идёт в том порядке,
- * в котором записи добавляли.
- */
 public class HashStore<K, T> implements EntityStore<K, T> {
     private static final int DEFAULT_CAPACITY = 16;
     private static final int MAX_CAPACITY = 1 << 30;
@@ -98,7 +93,6 @@ public class HashStore<K, T> implements EntityStore<K, T> {
         return false;
     }
 
-    /** Подменяет запись с тем же ключом; цепочки и порядок вставки не меняются. */
     public boolean replaceByKey(K key, T entity) {
         if (entity == null || !key.equals(keys.keyOf(entity))) {
             throw new IllegalArgumentException("Ключ новой записи должен совпадать с прежним");
@@ -129,7 +123,6 @@ public class HashStore<K, T> implements EntityStore<K, T> {
 
     public int capacity() { return buckets.length; }
 
-    /** Ключи узлов одной корзины — нужны панели, которая рисует внутреннее устройство таблицы. */
     public Object[] bucketKeys(int bucket, int limit) {
         if (bucket < 0 || bucket >= buckets.length) throw new IndexOutOfBoundsException("Нет корзины " + bucket);
         int length = 0;
@@ -142,7 +135,7 @@ public class HashStore<K, T> implements EntityStore<K, T> {
 
     public int bucketOf(K key) { return indexFor(hash(key), buckets.length); }
 
-    /** Честный пересчёт обходом корзин, не по счётчику size: так видно, что потерялось при гонке. */
+    // пересчёт по корзинам, а не по счётчику size: так видно, что потерялось при гонке
     public int reachableCount() {
         int count = 0;
         for (Node<K, T> head : buckets) {

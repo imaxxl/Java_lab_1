@@ -7,7 +7,6 @@ import javafx.scene.text.Font;
 import javafx.scene.text.TextAlignment;
 import ru.university.socialnetwork.store.StructureSnapshot;
 
-/** Рисует внутреннее устройство индекса вершин: массив корзин и цепочки узлов в каждой корзине. */
 final class HashPainter {
     private static final int ROWS_PER_COLUMN = 16;
     private static final double MARGIN = 14;

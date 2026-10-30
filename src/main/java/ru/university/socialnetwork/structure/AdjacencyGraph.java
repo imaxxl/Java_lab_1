@@ -1,10 +1,5 @@
 package ru.university.socialnetwork.structure;
 
-/**
- * Граф со списками смежности. Вершины лежат в собственной хеш-таблице, список соседей каждой вершины —
- * цепочка собственных узлов Edge, готовых коллекций нет. Класс не потокобезопасен: при обходе в ширину
- * вершины получают метки, поэтому даже чтение из двух потоков портит данные друг друга.
- */
 public class AdjacencyGraph<K, T> implements GraphStore<K, T> {
     private static final class Vertex<K, T> {
         final K key;
@@ -141,9 +136,9 @@ public class AdjacencyGraph<K, T> implements GraphStore<K, T> {
     @Override
     public int degree(K key) { return require(key).degree; }
 
-    /** Поиск в ширину: очередь — массив, длина пути считается по числу связей. O(V + E). */
     @Override
     @SuppressWarnings("unchecked")
+    // поиск в ширину; очередь — массив, каждая вершина попадает в неё один раз
     public Chain<K> shortestChain(K from, K to, Trace trace) {
         Vertex<K, T> start = vertices.findByKey(from, null);
         Vertex<K, T> goal = vertices.findByKey(to, null);
@@ -233,7 +228,6 @@ public class AdjacencyGraph<K, T> implements GraphStore<K, T> {
         return null;
     }
 
-    /** Убирает из списка owner узел, ведущий к target. */
     private static <K, T> boolean unlink(Vertex<K, T> owner, Vertex<K, T> target) {
         Edge<K, T> previous = null;
         for (Edge<K, T> edge = owner.edges; edge != null; previous = edge, edge = edge.next) {

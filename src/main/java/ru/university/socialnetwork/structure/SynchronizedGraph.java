@@ -1,6 +1,5 @@
 package ru.university.socialnetwork.structure;
 
-/** Защита от гонки: каждая операция целиком выполняется под одним замком, читатели получают согласованные данные. */
 public class SynchronizedGraph<K, T> implements GraphStore<K, T> {
     private final GraphStore<K, T> graph;
 

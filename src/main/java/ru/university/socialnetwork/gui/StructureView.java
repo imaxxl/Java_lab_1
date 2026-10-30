@@ -7,7 +7,6 @@ import javafx.scene.layout.Pane;
 import ru.university.socialnetwork.store.ProfileRepository;
 import ru.university.socialnetwork.store.StructureSnapshot;
 
-/** Панель с внутренним устройством структуры: граф и хеш-индекс. После каждой операции перерисовывается целиком. */
 final class StructureView extends TabPane {
     static final int MAX_VERTICES = 40;
     static final int MAX_BUCKETS = 32;

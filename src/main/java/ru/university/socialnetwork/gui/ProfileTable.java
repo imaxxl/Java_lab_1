@@ -12,7 +12,6 @@ import ru.university.socialnetwork.model.ProfileType;
 
 import java.util.List;
 
-/** Таблица профилей: колонки ID и года числовые, поэтому сортировка идёт по значению, а не по строке. */
 final class ProfileTable {
     private static final double TYPE_WIDTH = 160;
     private static final double ID_WIDTH = 48;

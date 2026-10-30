@@ -3,7 +3,6 @@ package ru.university.socialnetwork.gui;
 import ru.university.socialnetwork.structure.Chain;
 import ru.university.socialnetwork.structure.Trace;
 
-/** Что подсветить на панели после операции: посещённые узлы, найденный путь и выделенный узел. */
 record Highlight(int[] visited, int[] path, int focus, String caption) {
     static final int NO_FOCUS = -1;
     static final Highlight NONE = new Highlight(new int[0], new int[0], NO_FOCUS, "");
@@ -18,7 +17,6 @@ record Highlight(int[] visited, int[] path, int focus, String caption) {
 
     static Highlight caption(String text) { return new Highlight(new int[0], new int[0], NO_FOCUS, text); }
 
-    /** Порядковый номер посещения (с единицы) или 0, если узел не посещали. */
     int visitOrder(int id) {
         for (int i = 0; i < visited.length; i++) {
             if (visited[i] == id) return i + 1;

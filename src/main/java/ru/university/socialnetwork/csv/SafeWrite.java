@@ -9,7 +9,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-/** Запись через временный файл в той же папке: при сбое прежний файл остаётся целым. */
 final class SafeWrite {
     @FunctionalInterface
     interface Body {

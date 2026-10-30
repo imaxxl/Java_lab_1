@@ -17,10 +17,6 @@ import java.util.List;
 import java.util.Objects;
 import java.util.function.IntFunction;
 
-/**
- * Хранилище профилей поверх собственного графа: вершины — профили, рёбра — дружба.
- * Правила предметной области проверяются здесь, сама структура о них ничего не знает.
- */
 public final class ProfileRepository {
     private static final int NO_LIMIT = Integer.MAX_VALUE;
 
@@ -77,7 +73,6 @@ public final class ProfileRepository {
         graph.replaceByKey(originalId, replacement);
     }
 
-    /** Удаление записи через GUI: архив не трогаем, администратора сообщества оставляем на месте. */
     public synchronized void remove(int id, Trace trace) {
         Profile profile = graph.findByKey(id);
         if (profile == null) throw new IllegalArgumentException("Профиль " + id + " не найден");
@@ -93,7 +88,6 @@ public final class ProfileRepository {
         graph.removeByKey(id, trace);
     }
 
-    /** Добавление сгенерированной записи: допустимы и архивные типы, остальные проверки те же. */
     synchronized void forceAdd(Profile profile) {
         requireValid(profile);
         if (graph.findByKey(profile.getId()) != null) {
@@ -103,10 +97,8 @@ public final class ProfileRepository {
         graph.add(profile);
     }
 
-    /** Откат сгенерированных записей: проверки пропускаются, связи уходят вместе с вершиной. */
     synchronized void forceRemove(int id) { graph.removeByKey(id); }
 
-    /** Замена из файла проверяется целиком до изменения текущего состояния; связи при этом сбрасываются. */
     public synchronized void replaceAll(List<Profile> loaded) {
         Objects.requireNonNull(loaded, "Список профилей не задан");
         GraphStore<Integer, Profile> checked = new AdjacencyGraph<>(Profile::getId);

@@ -14,7 +14,6 @@ import javafx.stage.Window;
 
 import java.util.function.Consumer;
 
-/** Две вершины и, при добавлении, сила связи. Как и форма профиля, не закрывается, пока данные не подходят. */
 final class FriendshipDialog extends Dialog<int[]> {
     private static final double GAP = 10;
 

@@ -14,7 +14,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Window;
 import ru.university.socialnetwork.structure.RaceExperiment;
 
-/** Показывает гонку потоков: один и тот же сценарий на графе без защиты и на графе под synchronized. */
 final class RaceDialog extends Dialog<Void> {
     private static final int DEFAULT_THREADS = 4;
     private static final int DEFAULT_INSERTS = 20_000;

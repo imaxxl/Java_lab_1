@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Random;
 import java.util.function.BooleanSupplier;
 
-/** Создаёт набор профилей и дружб заданного размера. При отмене всё созданное откатывается. */
 public final class DataGenerator {
     private static final String[] NAMES = {"Анна", "Иван", "Мария", "Пётр", "Елена", "Сергей", "Ольга", "Дмитрий",
             "Наталья", "Алексей", "Татьяна", "Андрей", "Юлия", "Максим", "Ирина", "Артём", "Светлана", "Николай",
@@ -102,7 +101,7 @@ public final class DataGenerator {
         return added;
     }
 
-    /** Новые записи удаляются с конца, чтобы сообщество исчезало раньше своего администратора. */
+    // новые записи удаляются с конца, чтобы сообщество исчезало раньше своего администратора
     private static void rollback(ProfileRepository repository, int firstId, int created) {
         for (int i = created - 1; i >= 0; i--) repository.forceRemove(firstId + i);
     }

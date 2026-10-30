@@ -15,10 +15,6 @@ import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
-/**
- * Запускает фоновые операции по одной. Прогресс задачи показывается в панели, отмена одна для всех:
- * поток помечается флагом и прерывается, а задача сама решает, как закончить (генерация откатывает записи).
- */
 final class TaskRunner {
     private final BooleanProperty busy = new SimpleBooleanProperty(false);
     private final DoubleProperty progress = new SimpleDoubleProperty(0);
@@ -75,7 +71,6 @@ final class TaskRunner {
         });
     }
 
-    /** Ставит флаг и прерывает поток; как закончить, решает сама задача (генерация откатывает записи). */
     void cancel() {
         Thread thread = worker;
         if (current == null || thread == null) return;

@@ -9,7 +9,6 @@ import ru.university.socialnetwork.csv.CsvLoader;
 
 import java.util.List;
 
-
 public final class GuiAlerts {
     private static final int MAX_SHOWN_ERRORS = 50;
 

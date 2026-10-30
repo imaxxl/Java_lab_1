@@ -14,7 +14,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-/** Читает файл дружб: firstId;secondId;strength. Ошибочные строки пропускаются, как и в файле профилей. */
 public final class FriendshipLoader {
     public static final List<String> HEADER_FIELDS = List.of("firstId", "secondId", "strength");
     private static final int PROGRESS_STEP = 200;

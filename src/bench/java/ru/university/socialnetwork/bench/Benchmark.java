@@ -10,10 +10,6 @@ import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
-/**
- * Замеры времени операций над собственным графом (без защиты и под synchronized) и аналогом из java.util.
- * Запуск: ./gradlew benchmark. Результат одинаков по смыслу на любой машине, абсолютные числа — свои.
- */
 public final class Benchmark {
     private static final int[] SIZES = {10_000, 100_000};
     private static final int WARM_UP_SIZE = 20_000;
@@ -72,7 +68,6 @@ public final class Benchmark {
 
     private static String ms(long nanos) { return String.format("%.1f", nanos / 1_000_000.0); }
 
-    /** Строки результата: своя структура, своя под synchronized, аналог из java.util. */
     private static long[][] run(int size, int repeats, boolean verify) {
         Data data = prepare(size);
         long[][][] samples = new long[3][repeats][];

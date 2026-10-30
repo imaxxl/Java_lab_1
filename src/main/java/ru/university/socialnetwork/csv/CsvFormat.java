@@ -13,7 +13,6 @@ public final class CsvFormat {
 
     public static String header() { return String.join(String.valueOf(SEPARATOR), HEADER_FIELDS); }
 
-    /** Первая строка файла должна совпасть с ожидаемым заголовком; BOM перед ним допускается. */
     public static void requireHeader(String line, List<String> expected) throws CsvLoadException {
         if (line == null) {
             throw new CsvLoadException(CsvErrorCode.BAD_HEADER, 1, "Файл пуст: отсутствует заголовок CSV");

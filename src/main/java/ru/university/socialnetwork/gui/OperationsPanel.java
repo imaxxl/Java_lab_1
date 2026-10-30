@@ -24,7 +24,6 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.function.BooleanSupplier;
 
-/** Операции над структурой: поиск, цепочка знакомств, дружбы, генерация данных и опыт с гонкой потоков. */
 final class OperationsPanel extends VBox {
     private static final int DEFAULT_COUNT = 1000;
     private static final int MAX_COUNT = 1_000_000;
@@ -172,7 +171,6 @@ final class OperationsPanel extends VBox {
         if (file != null) saveFriendships(file.toPath());
     }
 
-    /** Разбор файла и добавление рёбер идут в фоне; при отмене добавленное убирается. */
     void loadFriendships(Path file) {
         ProfileRepository repository = workspace.repository();
         TaskRunner runner = workspace.runner();

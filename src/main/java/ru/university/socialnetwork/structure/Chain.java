@@ -1,6 +1,5 @@
 package ru.university.socialnetwork.structure;
 
-/** Результат поиска цепочки знакомств: ключи вершин от начала до конца пути. */
 public final class Chain<K> {
     private static final Chain<?> NONE = new Chain<>(new Object[0]);
 
