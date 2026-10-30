@@ -4,7 +4,10 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.stage.Window;
+import ru.university.socialnetwork.csv.CsvLoadException;
 import ru.university.socialnetwork.csv.CsvLoader;
+
+import java.util.List;
 
 
 public final class GuiAlerts {
@@ -36,19 +39,23 @@ public final class GuiAlerts {
     }
 
     public static void showCsvErrors(Window owner, CsvLoader.LoadResult result, boolean retainedOldData) {
-        if (result.errors().isEmpty()) return;
+        showCsvErrors(owner, "профилей", result.profiles().size(), result.errors(), retainedOldData);
+    }
+
+    public static void showCsvErrors(Window owner, String noun, int valid, List<CsvLoadException> errors,
+                                     boolean retainedOldData) {
+        if (errors.isEmpty()) return;
         Alert alert = new Alert(Alert.AlertType.WARNING);
         if (owner != null) alert.initOwner(owner);
         alert.setTitle("Ошибки загрузки CSV");
-        String summary = "Корректных профилей в файле: " + result.profiles().size()
-                + ". Ошибок: " + result.errors().size() + ".";
+        String summary = "Корректных " + noun + " в файле: " + valid + ". Ошибок: " + errors.size() + ".";
         if (retainedOldData) summary += " Текущие данные сохранены.";
-        if (result.errors().size() > MAX_SHOWN_ERRORS) {
+        if (errors.size() > MAX_SHOWN_ERRORS) {
             summary += " Ниже первые " + MAX_SHOWN_ERRORS + " ошибок.";
         }
         alert.setHeaderText(summary);
         StringBuilder details = new StringBuilder();
-        result.errors().stream().limit(MAX_SHOWN_ERRORS).forEach(error -> details
+        errors.stream().limit(MAX_SHOWN_ERRORS).forEach(error -> details
                 .append("Строка ").append(error.getLineNumber()).append(": ")
                 .append(error.getCode()).append(" — ").append(error.getMessage()).append('\n'));
         TextArea text = new TextArea(details.toString());

@@ -38,6 +38,7 @@ tasks.test {
     systemProperty("glass.platform", "Monocle")
     systemProperty("monocle.platform", "Headless")
     systemProperty("prism.order", "sw")
+    systemProperty("headless.geometry", "1600x900-32")
     systemProperty("java.awt.headless", "true")
     systemProperty("file.encoding", "UTF-8")
     testLogging { events("passed", "skipped", "failed") }
