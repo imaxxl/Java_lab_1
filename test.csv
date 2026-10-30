@@ -1,0 +1,5 @@
+type;id;name;city;birthYear;description;administratorId;reason
+PROFILE;1;Анна;Москва;2002;;;
+PROFILE;2;Иван;Омск;2001;;;
+DELETED;3;Пётр;Новосибирск;1999;;;Нарушение правил
+COMMUNITY;4;Java Club;Москва;2020;Сообщество Java;1;

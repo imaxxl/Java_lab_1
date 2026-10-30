@@ -1,0 +1,4 @@
+type;id;name;city;birthYear;description;administratorId;reason
+PROFILE;1;"Анна; Мария";"Город ""N""";2000;;;
+DELETED;2;Пётр;Омск;1999;;;"Архив; навсегда"
+COMMUNITY;3;Java Club;Москва;2020;"Java; Kotlin ""JVM""";1;

@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+<meta http-equiv="x-ua-compatible" content="IE=edge"/>
+<title>Test results - CsvValidationTest</title>
+<link href="../css/base-style.css" rel="stylesheet" type="text/css"/>
+<link href="../css/style.css" rel="stylesheet" type="text/css"/>
+<script src="../js/report.js" type="text/javascript"></script>
+</head>
+<body>
+<div id="content">
+<h1>CsvValidationTest</h1>
+<div class="breadcrumbs">
+<a href="../index.html">all</a> &gt; 
+<a href="../packages/ru.university.socialnetwork.csv.html">ru.university.socialnetwork.csv</a> &gt; CsvValidationTest</div>
+<div id="summary">
+<table>
+<tr>
+<td>
+<div class="summaryGroup">
+<table>
+<tr>
+<td>
+<div class="infoBox" id="tests">
+<div class="counter">36</div>
+<p>tests</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="failures">
+<div class="counter">0</div>
+<p>failures</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="ignored">
+<div class="counter">0</div>
+<p>ignored</p>
+</div>
+</td>
+<td>
+<div class="infoBox" id="duration">
+<div class="counter">0.525s</div>
+<p>duration</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+</td>
+<td>
+<div class="infoBox success" id="successRate">
+<div class="percent">100%</div>
+<p>successful</p>
+</div>
+</td>
+</tr>
+</table>
+</div>
+<div id="tabs">
+<ul class="tabLinks">
+<li>
+<a href="#tab0">Tests</a>
+</li>
+</ul>
+<div id="tab0" class="tab">
+<h2>Tests</h2>
+<table>
+<thead>
+<tr>
+<th>Test</th>
+<th>Method name</th>
+<th>Duration</th>
+<th>Result</th>
+</tr>
+</thead>
+<tr>
+<td class="success">acceptsUtf8BomBeforeHeader()</td>
+<td class="success">acceptsUtf8BomBeforeHeader()</td>
+<td class="success">0.016s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">administratorCanAppearAfterCommunity()</td>
+<td class="success">administratorCanAppearAfterCommunity()</td>
+<td class="success">0.011s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">badReferenceDoesNotReserveIdOfFollowingValidProfile()</td>
+<td class="success">badReferenceDoesNotReserveIdOfFollowingValidProfile()</td>
+<td class="success">0.013s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">deletedProfileCannotBeAdministrator()</td>
+<td class="success">deletedProfileCannotBeAdministrator()</td>
+<td class="success">0.011s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">emptyFileReportsBadHeader()</td>
+<td class="success">emptyFileReportsBadHeader()</td>
+<td class="success">0.003s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">exampleContainsFourValidRowsAndThreeErrors()</td>
+<td class="success">exampleContainsFourValidRowsAndThreeErrors()</td>
+<td class="success">0.004s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">loadResultListsCannotBeModified()</td>
+<td class="success">loadResultListsCannotBeModified()</td>
+<td class="success">0.012s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] </td>
+<td class="success">rejectsMissingOrWrongHeader(String)[1]</td>
+<td class="success">0.012s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] not a header</td>
+<td class="success">rejectsMissingOrWrongHeader(String)[2]</td>
+<td class="success">0.011s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[3] PROFILE;1;Анна;Город;2000;;;</td>
+<td class="success">rejectsMissingOrWrongHeader(String)[3]</td>
+<td class="success">0.015s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[4] type;id;city;name;birthYear;description;administratorId;reason</td>
+<td class="success">rejectsMissingOrWrongHeader(String)[4]</td>
+<td class="success">0.011s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">selfAdministratorDoesNotBlockFollowingHumanWithSameId()</td>
+<td class="success">selfAdministratorDoesNotBlockFollowingHumanWithSameId()</td>
+<td class="success">0.013s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[10] EMPTY_FIELD</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[10]</td>
+<td class="success">0.012s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[11] EMPTY_FIELD</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[11]</td>
+<td class="success">0.013s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[12] INVALID_VALUE</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[12]</td>
+<td class="success">0.013s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[13] INVALID_VALUE</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[13]</td>
+<td class="success">0.011s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[14] INVALID_VALUE</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[14]</td>
+<td class="success">0.013s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[15] INVALID_VALUE</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[15]</td>
+<td class="success">0.014s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[16] EMPTY_FIELD</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[16]</td>
+<td class="success">0.010s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[17] EMPTY_FIELD</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[17]</td>
+<td class="success">0.016s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[18] INVALID_VALUE</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[18]</td>
+<td class="success">0.012s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[19] BAD_NUMBER</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[19]</td>
+<td class="success">0.015s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[1] WRONG_FIELD_COUNT</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[1]</td>
+<td class="success">0.013s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[20] UNKNOWN_TYPE</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[20]</td>
+<td class="success">0.011s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[21] EMPTY_FIELD</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[21]</td>
+<td class="success">0.106s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[22] INVALID_VALUE</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[22]</td>
+<td class="success">0.013s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[23] BAD_CSV_FORMAT</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[23]</td>
+<td class="success">0.012s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[2] WRONG_FIELD_COUNT</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[2]</td>
+<td class="success">0.012s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[3] WRONG_FIELD_COUNT</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[3]</td>
+<td class="success">0.013s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[4] WRONG_FIELD_COUNT</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[4]</td>
+<td class="success">0.012s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[5] WRONG_FIELD_COUNT</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[5]</td>
+<td class="success">0.012s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[6] BAD_NUMBER</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[6]</td>
+<td class="success">0.013s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[7] BAD_NUMBER</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[7]</td>
+<td class="success">0.011s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[8] EMPTY_FIELD</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[8]</td>
+<td class="success">0.012s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">[9] EMPTY_FIELD</td>
+<td class="success">skipsBadRowAndContinuesWithCorrectErrorCode(String, CsvErrorCode)[9]</td>
+<td class="success">0.011s</td>
+<td class="success">passed</td>
+</tr>
+<tr>
+<td class="success">skipsCommunityWithMissingAdministrator()</td>
+<td class="success">skipsCommunityWithMissingAdministrator()</td>
+<td class="success">0.013s</td>
+<td class="success">passed</td>
+</tr>
+</table>
+</div>
+</div>
+<div id="footer">
+<p>
+<div>
+<label class="hidden" id="label-for-line-wrapping-toggle" for="line-wrapping-toggle">Wrap lines
+<input id="line-wrapping-toggle" type="checkbox" autocomplete="off"/>
+</label>
+</div>Generated by 
+<a href="http://www.gradle.org">Gradle 8.10.2</a> at 10 окт. 2026 г., 09:10:11</p>
+</div>
+</div>
+</body>
+</html>
