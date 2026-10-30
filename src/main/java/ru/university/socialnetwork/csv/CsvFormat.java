@@ -2,12 +2,21 @@ package ru.university.socialnetwork.csv;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public final class CsvFormat {
     public static final char SEPARATOR = ';';
     public static final List<String> HEADER_FIELDS = List.of(
             "type", "id", "name", "city", "birthYear", "description", "administratorId", "reason");
     public static final int FIELD_COUNT = HEADER_FIELDS.size();
+    public static final int TYPE = 0;
+    public static final int ID = 1;
+    public static final int NAME = 2;
+    public static final int CITY = 3;
+    public static final int BIRTH_YEAR = 4;
+    public static final int DESCRIPTION = 5;
+    public static final int ADMINISTRATOR_ID = 6;
+    public static final int REASON = 7;
 
     private CsvFormat() { }
 
@@ -72,7 +81,7 @@ public final class CsvFormat {
 
     public static String format(List<String> fields) {
         return fields.stream().map(CsvFormat::escape)
-                .collect(java.util.stream.Collectors.joining(String.valueOf(SEPARATOR)));
+                .collect(Collectors.joining(String.valueOf(SEPARATOR)));
     }
 
     private static String escape(String value) {

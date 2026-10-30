@@ -23,9 +23,9 @@ import java.util.Map;
 import java.util.Set;
 
 public final class CsvLoader {
-    public static String header() { return CsvFormat.header(); }
-
     private static final int PROGRESS_STEP = 200;
+
+    public static String header() { return CsvFormat.header(); }
 
     public LoadResult load(Path file) throws IOException {
         return load(file, null);
@@ -113,27 +113,31 @@ public final class CsvLoader {
             throw new CsvLoadException(CsvErrorCode.WRONG_FIELD_COUNT, lineNumber,
                     "Ожидается " + CsvFormat.FIELD_COUNT + " полей, получено " + fields.size());
         }
-        requireField(fields, 0, lineNumber);
+        requireField(fields, CsvFormat.TYPE, lineNumber);
         ProfileType type;
         try {
-            type = ProfileType.valueOf(fields.get(0).trim());
+            type = ProfileType.valueOf(fields.get(CsvFormat.TYPE).trim());
         } catch (IllegalArgumentException e) {
             throw new CsvLoadException(CsvErrorCode.UNKNOWN_TYPE, lineNumber,
-                    "Неизвестный тип: " + fields.get(0), e);
+                    "Неизвестный тип: " + fields.get(CsvFormat.TYPE), e);
         }
-        for (int index : new int[]{1, 2, 3, 4}) requireField(fields, index, lineNumber);
+        for (int index : new int[]{CsvFormat.ID, CsvFormat.NAME, CsvFormat.CITY, CsvFormat.BIRTH_YEAR}) {
+            requireField(fields, index, lineNumber);
+        }
         if (type == ProfileType.COMMUNITY) {
-            requireField(fields, 5, lineNumber);
-            requireField(fields, 6, lineNumber);
+            requireField(fields, CsvFormat.DESCRIPTION, lineNumber);
+            requireField(fields, CsvFormat.ADMINISTRATOR_ID, lineNumber);
         }
         checkUnusedFields(fields, type, lineNumber);
-        int id = number(fields, 1, lineNumber);
-        int birthYear = number(fields, 4, lineNumber);
+        int id = number(fields, CsvFormat.ID, lineNumber);
+        int birthYear = number(fields, CsvFormat.BIRTH_YEAR, lineNumber);
+        String name = fields.get(CsvFormat.NAME);
+        String city = fields.get(CsvFormat.CITY);
         Profile profile = switch (type) {
-            case PROFILE -> new EditableProfile(id, fields.get(2), fields.get(3), birthYear);
-            case DELETED -> new DeletedProfile(id, fields.get(2), fields.get(3), birthYear, fields.get(7));
-            case COMMUNITY -> new Community(id, fields.get(2), fields.get(3), birthYear,
-                    fields.get(5), number(fields, 6, lineNumber));
+            case PROFILE -> new EditableProfile(id, name, city, birthYear);
+            case DELETED -> new DeletedProfile(id, name, city, birthYear, fields.get(CsvFormat.REASON));
+            case COMMUNITY -> new Community(id, name, city, birthYear, fields.get(CsvFormat.DESCRIPTION),
+                    number(fields, CsvFormat.ADMINISTRATOR_ID, lineNumber));
         };
         List<ValidationIssue> issues = profile.validationIssues();
         if (!issues.isEmpty()) {
@@ -164,9 +168,9 @@ public final class CsvLoader {
     private static void checkUnusedFields(List<String> fields, ProfileType type,
                                           int lineNumber) throws CsvLoadException {
         int[] unused = switch (type) {
-            case PROFILE -> new int[]{5, 6, 7};
-            case DELETED -> new int[]{5, 6};
-            case COMMUNITY -> new int[]{7};
+            case PROFILE -> new int[]{CsvFormat.DESCRIPTION, CsvFormat.ADMINISTRATOR_ID, CsvFormat.REASON};
+            case DELETED -> new int[]{CsvFormat.DESCRIPTION, CsvFormat.ADMINISTRATOR_ID};
+            case COMMUNITY -> new int[]{CsvFormat.REASON};
         };
         for (int index : unused) {
             if (!fields.get(index).isBlank()) {

@@ -16,6 +16,9 @@ import java.util.Set;
 
 public final class FriendshipLoader {
     public static final List<String> HEADER_FIELDS = List.of("firstId", "secondId", "strength");
+    private static final int FIRST_ID = 0;
+    private static final int SECOND_ID = 1;
+    private static final int STRENGTH = 2;
     private static final int PROGRESS_STEP = 200;
     private static final int ID_SHIFT = 32;
 
@@ -68,9 +71,9 @@ public final class FriendshipLoader {
                         "Не заполнено поле " + HEADER_FIELDS.get(index));
             }
         }
-        int first = number(fields, 0, lineNumber);
-        int second = number(fields, 1, lineNumber);
-        int strength = number(fields, 2, lineNumber);
+        int first = number(fields, FIRST_ID, lineNumber);
+        int second = number(fields, SECOND_ID, lineNumber);
+        int strength = number(fields, STRENGTH, lineNumber);
         Friendship friendship;
         try {
             friendship = new Friendship(first, second, strength);
