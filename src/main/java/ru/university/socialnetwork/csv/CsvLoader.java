@@ -25,7 +25,14 @@ import java.util.Set;
 public final class CsvLoader {
     public static String header() { return CsvFormat.header(); }
 
+    private static final int PROGRESS_STEP = 200;
+
     public LoadResult load(Path file) throws IOException {
+        return load(file, null);
+    }
+
+    public LoadResult load(Path file, LoadProgress progress) throws IOException {
+        long total = progress == null ? 0 : LineCounter.count(file);
         List<Row> candidates = new ArrayList<>();
         List<CsvLoadException> errors = new ArrayList<>();
         try (BufferedReader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
@@ -42,6 +49,7 @@ public final class CsvLoader {
                 if (Thread.currentThread().isInterrupted()) {
                     throw new InterruptedIOException("Загрузка отменена");
                 }
+                if (progress != null && lineNumber % PROGRESS_STEP == 0) progress.update(lineNumber, total);
                 if (line.isBlank()) continue;
                 try {
                     Profile profile = parseProfile(line, lineNumber);
@@ -52,6 +60,7 @@ public final class CsvLoader {
             }
         }
 
+        if (progress != null) progress.update(total, total);
         Set<Integer> possibleAdministrators = new HashSet<>();
         for (Row row : candidates) {
             if (ProfileRepository.canBeAdministrator(row.profile())) {
@@ -90,18 +99,7 @@ public final class CsvLoader {
     }
 
     private static void checkHeader(String line) throws CsvLoadException {
-        if (line == null) {
-            throw new CsvLoadException(CsvErrorCode.BAD_HEADER, 1, "Файл пуст: отсутствует заголовок CSV");
-        }
-        if (line.startsWith("\uFEFF")) line = line.substring(1);
-        try {
-            if (!CsvFormat.parse(line).equals(CsvFormat.HEADER_FIELDS)) {
-                throw new CsvLoadException(CsvErrorCode.BAD_HEADER, 1,
-                        "Ожидается заголовок: " + header());
-            }
-        } catch (CsvFormat.ParseException e) {
-            throw new CsvLoadException(CsvErrorCode.BAD_HEADER, 1, e.getMessage(), e);
-        }
+        CsvFormat.requireHeader(line, CsvFormat.HEADER_FIELDS);
     }
 
     private static Profile parseProfile(String line, int lineNumber) throws CsvLoadException {

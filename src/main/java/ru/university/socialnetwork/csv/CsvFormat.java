@@ -13,6 +13,22 @@ public final class CsvFormat {
 
     public static String header() { return String.join(String.valueOf(SEPARATOR), HEADER_FIELDS); }
 
+    /** Первая строка файла должна совпасть с ожидаемым заголовком; BOM перед ним допускается. */
+    public static void requireHeader(String line, List<String> expected) throws CsvLoadException {
+        if (line == null) {
+            throw new CsvLoadException(CsvErrorCode.BAD_HEADER, 1, "Файл пуст: отсутствует заголовок CSV");
+        }
+        if (line.startsWith("\uFEFF")) line = line.substring(1);
+        try {
+            if (!parse(line).equals(expected)) {
+                throw new CsvLoadException(CsvErrorCode.BAD_HEADER, 1,
+                        "Ожидается заголовок: " + String.join(String.valueOf(SEPARATOR), expected));
+            }
+        } catch (ParseException e) {
+            throw new CsvLoadException(CsvErrorCode.BAD_HEADER, 1, e.getMessage(), e);
+        }
+    }
+
     public static List<String> parse(String line) throws ParseException {
         List<String> fields = new ArrayList<>();
         StringBuilder value = new StringBuilder();

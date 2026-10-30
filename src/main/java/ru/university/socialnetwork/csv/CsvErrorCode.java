@@ -8,6 +8,7 @@ public enum CsvErrorCode {
     EMPTY_FIELD,
     UNKNOWN_TYPE,
     DUPLICATE_ID,
+    DUPLICATE_FRIENDSHIP,
     INVALID_VALUE,
     INVALID_REFERENCE
 }
