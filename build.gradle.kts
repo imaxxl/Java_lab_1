@@ -31,6 +31,22 @@ tasks.withType<JavaCompile>().configureEach {
     options.compilerArgs.addAll(listOf("-Xlint:deprecation", "-Xlint:unchecked"))
 }
 
+sourceSets {
+    create("bench") {
+        compileClasspath += sourceSets["main"].output + configurations.runtimeClasspath.get()
+        runtimeClasspath += output + compileClasspath
+    }
+}
+
+// Замеры времени: ./gradlew benchmark (в обычную сборку и тесты не входят)
+tasks.register<JavaExec>("benchmark") {
+    group = "verification"
+    description = "Замеры операций над собственным графом и аналогом из java.util"
+    classpath = sourceSets["bench"].runtimeClasspath
+    mainClass.set("ru.university.socialnetwork.bench.Benchmark")
+    jvmArgs("-Xms512m", "-Xmx1g", "-Dfile.encoding=UTF-8", "-Dstdout.encoding=UTF-8")
+}
+
 tasks.test {
     useJUnitPlatform()
     maxParallelForks = 1
