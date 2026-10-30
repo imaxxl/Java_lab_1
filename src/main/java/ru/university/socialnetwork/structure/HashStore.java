@@ -1,7 +1,7 @@
 package ru.university.socialnetwork.structure;
 
 public class HashStore<K, T> implements EntityStore<K, T> {
-    private static final int DEFAULT_CAPACITY = 16;
+    static final int DEFAULT_CAPACITY = 16;
     private static final int MAX_CAPACITY = 1 << 30;
     private static final int LOAD_NUMERATOR = 3;
     private static final int LOAD_DENOMINATOR = 4;
@@ -201,7 +201,7 @@ public class HashStore<K, T> implements EntityStore<K, T> {
         return size;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "rawtypes"})
     private static <K, T> Node<K, T>[] newTable(int length) {
         return (Node<K, T>[]) new Node[length];
     }

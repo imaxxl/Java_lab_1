@@ -3,6 +3,7 @@ package ru.university.socialnetwork.structure;
 public final class RaceExperiment {
     private static final int HUB = 0;
     private static final int TABLE_CAPACITY = 1024;
+    private static final long NANOS_PER_MILLI = 1_000_000L;
 
     public record Result(boolean guarded, int threads, int perThread,
                          int expectedVertices, int countedVertices, int vertexCounter,
@@ -28,7 +29,7 @@ public final class RaceExperiment {
         long started = System.nanoTime();
         runPhase(graph, threads, perThread, false, failures);
         runPhase(graph, threads, perThread, true, failures);
-        long millis = (System.nanoTime() - started) / 1_000_000;
+        long millis = (System.nanoTime() - started) / NANOS_PER_MILLI;
         int failed = 0;
         for (int count : failures) failed += count;
         int expectedVertices = threads * perThread + 1;

@@ -25,6 +25,10 @@ import java.util.Objects;
 import java.util.function.Consumer;
 
 public final class ProfileEditorDialog extends Dialog<Profile> {
+    private static final double H_GAP = 12;
+    private static final double V_GAP = 10;
+    private static final double PADDING = 15;
+
     private final ComboBox<ProfileType> typeField = new ComboBox<>();
     private final TextField idField = new TextField();
     private final TextField nameField = new TextField();
@@ -68,18 +72,19 @@ public final class ProfileEditorDialog extends Dialog<Profile> {
         }
 
         GridPane grid = new GridPane();
-        grid.setHgap(12);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(15));
+        grid.setHgap(H_GAP);
+        grid.setVgap(V_GAP);
+        grid.setPadding(new Insets(PADDING));
         Label descriptionLabel = new Label("Описание:");
         Label administratorLabel = new Label("ID администратора:");
-        grid.addRow(0, new Label("Тип:"), typeField);
-        grid.addRow(1, new Label("ID:"), idField);
-        grid.addRow(2, new Label("Имя / название:"), nameField);
-        grid.addRow(3, new Label("Город:"), cityField);
-        grid.addRow(4, new Label("Год:"), yearField);
-        grid.addRow(5, descriptionLabel, descriptionField);
-        grid.addRow(6, administratorLabel, administratorField);
+        int row = 0;
+        grid.addRow(row++, new Label("Тип:"), typeField);
+        grid.addRow(row++, new Label("ID:"), idField);
+        grid.addRow(row++, new Label("Имя / название:"), nameField);
+        grid.addRow(row++, new Label("Город:"), cityField);
+        grid.addRow(row++, new Label("Год:"), yearField);
+        grid.addRow(row++, descriptionLabel, descriptionField);
+        grid.addRow(row, administratorLabel, administratorField);
         List<Node> communityFields = List.of(descriptionLabel, descriptionField,
                 administratorLabel, administratorField);
         Runnable updateFields = () -> communityFields.forEach(node -> {

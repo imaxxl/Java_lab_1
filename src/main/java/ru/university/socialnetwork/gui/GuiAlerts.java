@@ -1,6 +1,8 @@
 package ru.university.socialnetwork.gui;
 
 import javafx.scene.control.Alert;
+import javafx.scene.control.Button;
+import javafx.scene.control.ButtonBar;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.TextArea;
 import javafx.stage.Window;
@@ -11,6 +13,8 @@ import java.util.List;
 
 public final class GuiAlerts {
     private static final int MAX_SHOWN_ERRORS = 50;
+    private static final int ERRORS_COLUMNS = 75;
+    private static final int ERRORS_ROWS = 8;
 
     private GuiAlerts() { }
 
@@ -25,15 +29,15 @@ public final class GuiAlerts {
 
     public static boolean confirmDiscard(Window owner) {
         ButtonType discard = new ButtonType("Продолжить без сохранения");
-        ButtonType cancel = new ButtonType("Отмена", javafx.scene.control.ButtonBar.ButtonData.CANCEL_CLOSE);
+        ButtonType cancel = new ButtonType("Отмена", ButtonBar.ButtonData.CANCEL_CLOSE);
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION,
                 "Есть несохранённые изменения. Продолжить?", discard, cancel);
         if (owner != null) alert.initOwner(owner);
         alert.setTitle("Несохранённые изменения");
         alert.setHeaderText(null);
         alert.getDialogPane().lookupButton(discard).setStyle("-fx-font-weight: normal;");
-        ((javafx.scene.control.Button) alert.getDialogPane().lookupButton(discard)).setDefaultButton(false);
-        ((javafx.scene.control.Button) alert.getDialogPane().lookupButton(cancel)).setDefaultButton(true);
+        ((Button) alert.getDialogPane().lookupButton(discard)).setDefaultButton(false);
+        ((Button) alert.getDialogPane().lookupButton(cancel)).setDefaultButton(true);
         return alert.showAndWait().filter(discard::equals).isPresent();
     }
 
@@ -60,8 +64,8 @@ public final class GuiAlerts {
         TextArea text = new TextArea(details.toString());
         text.setEditable(false);
         text.setWrapText(true);
-        text.setPrefColumnCount(75);
-        text.setPrefRowCount(8);
+        text.setPrefColumnCount(ERRORS_COLUMNS);
+        text.setPrefRowCount(ERRORS_ROWS);
         alert.getDialogPane().setContent(text);
         alert.setResizable(true);
         alert.showAndWait();

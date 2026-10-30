@@ -20,6 +20,8 @@ final class RaceDialog extends Dialog<Void> {
     private static final int MAX_THREADS = 16;
     private static final int MAX_INSERTS = 200_000;
     private static final double GAP = 10;
+    private static final int OUTPUT_ROWS = 14;
+    private static final int OUTPUT_COLUMNS = 72;
 
     private final TextField threadsField = new TextField(String.valueOf(DEFAULT_THREADS));
     private final TextField insertsField = new TextField(String.valueOf(DEFAULT_INSERTS));
@@ -33,8 +35,8 @@ final class RaceDialog extends Dialog<Void> {
         insertsField.setId("insertsField");
         output.setId("raceOutput");
         output.setEditable(false);
-        output.setPrefRowCount(14);
-        output.setPrefColumnCount(72);
+        output.setPrefRowCount(OUTPUT_ROWS);
+        output.setPrefColumnCount(OUTPUT_COLUMNS);
         output.setStyle("-fx-font-family: 'monospace';");
         output.setText("Потоки одновременно добавляют вершины, а потом рёбра к общей вершине.\n"
                 + "Без защиты часть записей и счётчиков теряется, под synchronized всё сходится.");

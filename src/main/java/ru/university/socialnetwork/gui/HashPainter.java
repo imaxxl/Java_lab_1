@@ -17,6 +17,8 @@ final class HashPainter {
     private static final double BOX_HEIGHT = 19;
     private static final double GAP = 12;
     private static final double FONT_SIZE = 11;
+    private static final double TITLE_Y = 18;
+    private static final double CAPTION_BOTTOM = 14;
 
     private static final Color BACKGROUND = Color.web("#fbfbfb");
     private static final Color TEXT = Color.web("#202124");
@@ -37,11 +39,12 @@ final class HashPainter {
         String shown = snapshot.bucketTotal() > snapshot.shownBuckets()
                 ? " (показаны первые " + snapshot.shownBuckets() + ")" : "";
         g.fillText("Индекс вершин — хеш-таблица: корзин " + snapshot.bucketTotal() + shown
-                + ", записей " + snapshot.vertexTotal(), MARGIN, 18);
-        g.fillText(highlight.caption(), MARGIN, height - 14);
+                + ", записей " + snapshot.vertexTotal(), MARGIN, TITLE_Y);
+        g.fillText(highlight.caption(), MARGIN, height - CAPTION_BOTTOM);
         double columnWidth = (width - 2 * MARGIN) / 2;
         for (int bucket = 0; bucket < snapshot.shownBuckets(); bucket++) {
-            double x = MARGIN + (bucket / ROWS_PER_COLUMN) * columnWidth;
+            int column = bucket / ROWS_PER_COLUMN;
+            double x = MARGIN + column * columnWidth;
             double y = TOP + (bucket % ROWS_PER_COLUMN) * ROW_HEIGHT;
             drawBucket(g, snapshot, highlight, bucket, x, y);
         }

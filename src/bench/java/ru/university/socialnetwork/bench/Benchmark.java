@@ -18,6 +18,9 @@ public final class Benchmark {
     private static final int REPEATS = 5;
     private static final long SEED = 2026;
     private static final int STRENGTH_RANGE = 9;
+    private static final int ID_SHIFT = 32;
+    private static final double NANOS_PER_MICRO = 1_000.0;
+    private static final double NANOS_PER_MILLI = 1_000_000.0;
     private static final String[] OPERATIONS = {"Вставка вершин", "Вставка рёбер (3 на вершину)", "Поиск вершины",
             "Цепочка знакомств, BFS (100 запросов)", "Удаление вершин"};
     private static final int INSERT = 0;
@@ -54,7 +57,7 @@ public final class Benchmark {
             System.out.println("| --- | ---: | ---: | ---: | ---: |");
             for (int op = 0; op < OPERATIONS.length; op++) {
                 int count = op == CHAIN ? CHAIN_QUERIES : op == EDGES ? size * EDGES_PER_VERTEX : size;
-                double micros = table[0][op] / 1000.0 / count;
+                double micros = table[0][op] / NANOS_PER_MICRO / count;
                 System.out.printf("| %s | %s | %s | %s | %.2f |%n", OPERATIONS[op], ms(table[0][op]),
                         ms(table[1][op]), ms(table[2][op]), micros);
                 csv.append(size).append(';').append(OPERATIONS[op]).append(';').append(ms(table[0][op]))
@@ -66,7 +69,7 @@ public final class Benchmark {
         System.out.println("CSV:\n" + csv);
     }
 
-    private static String ms(long nanos) { return String.format("%.1f", nanos / 1_000_000.0); }
+    private static String ms(long nanos) { return String.format("%.1f", nanos / NANOS_PER_MILLI); }
 
     private static long[][] run(int size, int repeats, boolean verify) {
         Data data = prepare(size);
@@ -166,7 +169,7 @@ public final class Benchmark {
         for (int i = 0; i < edges.length; ) {
             int a = 1 + random.nextInt(size);
             int b = 1 + random.nextInt(size);
-            long pair = ((long) Math.min(a, b) << 32) | Math.max(a, b);
+            long pair = ((long) Math.min(a, b) << ID_SHIFT) | Math.max(a, b);
             if (a != b && used.add(pair)) edges[i++] = new int[]{a, b, 1 + random.nextInt(STRENGTH_RANGE)};
         }
         int[][] queries = new int[CHAIN_QUERIES][];

@@ -16,10 +16,11 @@ import java.util.function.Consumer;
 
 final class FriendshipDialog extends Dialog<int[]> {
     private static final double GAP = 10;
+    private static final int DEFAULT_STRENGTH = 1;
 
     private final TextField firstField = new TextField();
     private final TextField secondField = new TextField();
-    private final TextField strengthField = new TextField("1");
+    private final TextField strengthField = new TextField(String.valueOf(DEFAULT_STRENGTH));
     private final boolean withStrength;
     private int[] candidate;
 
@@ -60,7 +61,7 @@ final class FriendshipDialog extends Dialog<int[]> {
     private int[] read() {
         int first = number(firstField, "ID первого");
         int second = number(secondField, "ID второго");
-        int strength = withStrength ? number(strengthField, "Сила связи") : 1;
+        int strength = withStrength ? number(strengthField, "Сила связи") : DEFAULT_STRENGTH;
         return new int[]{first, second, strength};
     }
 

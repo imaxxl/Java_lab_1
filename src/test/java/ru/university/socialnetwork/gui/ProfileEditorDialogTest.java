@@ -88,6 +88,7 @@ class ProfileEditorDialogTest {
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void communityCanBeCreatedThroughEditor() throws Exception {
         FxTestSupport.run(() -> {
             ProfileRepository repository = new ProfileRepository();

@@ -9,6 +9,8 @@ import javafx.scene.text.TextAlignment;
 import ru.university.socialnetwork.model.ProfileType;
 import ru.university.socialnetwork.store.StructureSnapshot;
 
+import java.util.Locale;
+
 final class GraphPainter {
     private static final double MARGIN = 54;
     private static final double BIG_RADIUS = 17;
@@ -27,6 +29,12 @@ final class GraphPainter {
     private static final double LABEL_SIZE = 11;
     private static final double SMALL_LABEL_SIZE = 9;
     private static final double ORDER_SIZE = 9;
+    private static final double EMPTY_TEXT_SIZE = 14;
+    private static final double MIN_LAYOUT_RADIUS = 10;
+    private static final double THIN_WIDTH = 1;
+    private static final double MARKED_WIDTH = 3;
+    private static final double STATS_BOTTOM = 34;
+    private static final double CAPTION_BOTTOM = 14;
 
     private static final Color BACKGROUND = Color.web("#fbfbfb");
     private static final Color TEXT = Color.web("#202124");
@@ -55,7 +63,7 @@ final class GraphPainter {
         int count = snapshot.shownVertices();
         if (count == 0) {
             g.setFill(TEXT);
-            g.setFont(Font.font(14));
+            g.setFont(Font.font(EMPTY_TEXT_SIZE));
             g.fillText("Граф пуст: загрузите файл, добавьте профиль или сгенерируйте данные.", TEXT_X, height / 2);
             return;
         }
@@ -68,7 +76,7 @@ final class GraphPainter {
     }
 
     private static void layout(double[] xs, double[] ys, double width, double height) {
-        double radius = Math.max(10, Math.min(width, height) / 2 - MARGIN);
+        double radius = Math.max(MIN_LAYOUT_RADIUS, Math.min(width, height) / 2 - MARGIN);
         for (int i = 0; i < xs.length; i++) {
             double angle = 2 * Math.PI * i / xs.length - Math.PI / 2;
             xs[i] = width / 2 + radius * Math.cos(angle);
@@ -81,13 +89,13 @@ final class GraphPainter {
         g.setFont(font);
         double x = TEXT_X;
         for (ProfileType type : ProfileType.values()) {
-            x = legendItem(g, x, colorOf(type), type.toString().toLowerCase(), font);
+            x = legendItem(g, x, colorOf(type), type.toString().toLowerCase(Locale.ROOT), font);
         }
         x = legendItem(g, x, VISITED, "посещён", font);
         g.setStroke(PATH);
         g.setLineWidth(PATH_WIDTH);
         g.strokeLine(x, LEGEND_Y, x + 2 * LEGEND_DOT, LEGEND_Y);
-        g.setLineWidth(1);
+        g.setLineWidth(THIN_WIDTH);
         g.setFill(TEXT);
         g.fillText("путь", x + 2 * LEGEND_DOT + LEGEND_TEXT_SHIFT, LEGEND_Y);
     }
@@ -120,7 +128,7 @@ final class GraphPainter {
             if (labels) drawStrength(g, String.valueOf(snapshot.edgeStrength(i)),
                     (xs[from] + xs[to]) / 2, (ys[from] + ys[to]) / 2);
         }
-        g.setLineWidth(1);
+        g.setLineWidth(THIN_WIDTH);
     }
 
     private static void drawStrength(GraphicsContext g, String text, double x, double y) {
@@ -129,7 +137,7 @@ final class GraphPainter {
         g.strokeText(text, x, y);
         g.setFill(TEXT);
         g.fillText(text, x, y);
-        g.setLineWidth(1);
+        g.setLineWidth(THIN_WIDTH);
     }
 
     private static void drawVertices(GraphicsContext g, StructureSnapshot snapshot, Highlight highlight,
@@ -143,15 +151,15 @@ final class GraphPainter {
             g.fillOval(xs[i] - radius, ys[i] - radius, 2 * radius, 2 * radius);
             boolean onPath = highlight.onPath(id);
             g.setStroke(onPath ? PATH : OUTLINE);
-            g.setLineWidth(onPath ? 3 : 1);
+            g.setLineWidth(onPath ? MARKED_WIDTH : THIN_WIDTH);
             g.strokeOval(xs[i] - radius, ys[i] - radius, 2 * radius, 2 * radius);
             if (id == highlight.focus()) {
                 g.setStroke(FOCUS);
-                g.setLineWidth(3);
+                g.setLineWidth(MARKED_WIDTH);
                 double ring = radius + FOCUS_GAP;
                 g.strokeOval(xs[i] - ring, ys[i] - ring, 2 * ring, 2 * ring);
             }
-            g.setLineWidth(1);
+            g.setLineWidth(THIN_WIDTH);
             g.setFill(TEXT);
             g.setFont(Font.font(radius == BIG_RADIUS ? LABEL_SIZE : SMALL_LABEL_SIZE));
             g.fillText(String.valueOf(id), xs[i], ys[i]);
@@ -169,7 +177,7 @@ final class GraphPainter {
         String shown = snapshot.vertexTotal() > snapshot.shownVertices()
                 ? "Показаны первые " + snapshot.shownVertices() + " из " + snapshot.vertexTotal() + " вершин. " : "";
         g.fillText(shown + "Вершин: " + snapshot.vertexTotal() + ", связей: " + snapshot.edgeTotal(),
-                TEXT_X, height - 34);
-        g.fillText(highlight.caption(), TEXT_X, height - 14);
+                TEXT_X, height - STATS_BOTTOM);
+        g.fillText(highlight.caption(), TEXT_X, height - CAPTION_BOTTOM);
     }
 }

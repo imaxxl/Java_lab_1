@@ -1,13 +1,13 @@
 package ru.university.socialnetwork.gui;
 
 import javafx.concurrent.Task;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.stage.FileChooser;
 import ru.university.socialnetwork.csv.FriendshipLoader;
@@ -67,7 +67,7 @@ final class OperationsPanel extends VBox {
 
     private static FlowPane row(Node... nodes) {
         FlowPane row = new FlowPane(GAP, GAP, nodes);
-        row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
+        row.setAlignment(Pos.CENTER_LEFT);
         return row;
     }
 

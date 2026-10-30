@@ -36,7 +36,7 @@ public class AdjacencyGraph<K, T> implements GraphStore<K, T> {
     private int stamp;
 
     public AdjacencyGraph(KeyExtractor<K, T> keys) {
-        this(keys, 16, true);
+        this(keys, HashStore.DEFAULT_CAPACITY, true);
     }
 
     public AdjacencyGraph(KeyExtractor<K, T> keys, int capacity, boolean autoResize) {
